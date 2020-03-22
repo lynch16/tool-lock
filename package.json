@@ -1,0 +1,13 @@
+{
+  "name": "tool-lock",
+  "version": "1.0.0",
+  "description": "Manage access to lockboxes for makerspace tools",
+  "main": "index.js",
+  "author": "<will.lynch@manchestermakerspace.org>",
+  "license": "MIT",
+  "dependencies": {
+    "@slack/web-api": "^5.7.0",
+    "googleapis": "^47.0.0",
+    "mongodb": "^3.5.5"
+  }
+}
