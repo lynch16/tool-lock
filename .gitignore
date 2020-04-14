@@ -1,3 +1,5 @@
 secrets.env
 node_modules
 yarn-error.log
+
+i2c_search/
