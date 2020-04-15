@@ -1,6 +1,13 @@
 /*
- * Arduino Nano slave that  receives 1 byte messages from master to unlock door
- * All side effects and conditionals of door locking handled internal to slave
+ * Arduino Nano slave that controls multiple doors
+ * Uses a single pin r/g LED to indicate permissions
+ *   - Red (LOW) indicates locked; Green (HIGH) indicates unlocked; Blinking R/G indicates in use
+ * Uses a SG90 servo for door locking mechanism
+ * Uses a simple contact switch for door open/closed indicator
+ * 
+ * Receives instructions from master as to which doors to unlock
+ * Does not have internal knowledge of what its doors do, only their state and usage metrics
+ * Compiles metrics on last used and number of uses on EEPROM; reports and clears metrics every X minutes
  */
 
 #include <Wire.h>
@@ -11,10 +18,20 @@
 #define SERVO_PIN 4
 #define DOOR_SWITCH 3
 
+#define LOCK_POSITION LOW
+#define UNLOCK_POSITION HIGH
+
 byte lockState = LOW; // 0 Locked, 1 unlocked
 byte doorClosed = LOW; // 0 Closed, 1 open
 Servo lockMotor;
 
+
+/**
+ * On Boot
+ * 1. Initialize with master
+ * 2. Wait for list of tools from master (bytes == num of servos on node)
+ * 
+ */
 void setup() {
   Serial.begin(9600);           /* start serial for debug */
   
